@@ -16,9 +16,9 @@ function App() {
     const dietsResponse = await fetch(`${DIETS_API}${getVegans(guestsData)}`);
     const dietsData = await dietsResponse.json();
 
-    const whoEats = (data) => data.party.filter(eat => eat.eatsPizza).length;
-    const checkoutVegans= (data) => data.diet.filter(vegan => vegan.isVegan).length;
-    const percentVegans = (data) => Math.floor((checkoutVegans / data.diet.length) * 100);
+    const whoEats =  guestsData.party.filter(eat => eat.eatsPizza).length;
+    const checkoutVegans = dietsData.diet.filter(vegan => vegan.isVegan).length;
+    const percentVegans = Math.floor((checkoutVegans / dietsData.diet.length) * 100);
 
     const [order, currency] = await Promise.all(
         [fetch(`${ORDER_API}${percentVegans > 51 ? 'vegan' : 'meat'}/${whoEats}`).then(res => res.json()),
