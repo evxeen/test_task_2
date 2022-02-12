@@ -9,10 +9,18 @@ function App() {
   const [message, setMessage] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
 
+  const checkOutVegans = (data) => {
+    let result = [];
+     data.party.forEach((person) => {
+       result.push(`${person.name.replace(' ' , '%20')}`);
+     })
+    return result.join();
+  }
+
   const fetched = async () => {
     const guestsResponse = await fetch(GUESTS_API);
     const guestsData = await guestsResponse.json();
-    const dietsResponse = await fetch(DIETS_API);
+    const dietsResponse = await fetch(`${DIETS_API}${checkOutVegans(guestsData)}`);
     const dietsData = await dietsResponse.json();
 
     const [one, two] = await Promise.all(
@@ -21,11 +29,9 @@ function App() {
 
     setMessage(false);
     setIsLoading(false);
+
     console.log(guestsData);
     console.log(dietsData);
-
-    console.log(one);
-    console.log(two);
   }
 
   const showLoading = () => {
