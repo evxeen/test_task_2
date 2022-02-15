@@ -10,6 +10,7 @@ import {changeStrings, getData, getPizza} from "./helpers";
 function App() {
   const [message, setMessage] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
+  const [data, setData] = useState([]);
 
   const fetched = async () => {
     const { party } = await getData(GUESTS_API);
@@ -19,6 +20,7 @@ function App() {
         [getData(ORDER_API, getPizza(diet)),
           getData(CURRENCY_API)]);
 
+    setData(party);
     setMessage(false);
     setIsLoading(false);
   }
@@ -29,10 +31,14 @@ function App() {
   }
   return (
     <div className="App">
-      <button className='load' onClick={showLoading}>Loading</button>
-      {message ? <h2>Load...</h2> : null}
-      {isLoading ? null: <Table />}
-      <Pizza />
+      <header className='header'>
+        <button className='load' onClick={showLoading}>Loading</button>
+        {message ? <h2>Load...</h2> : null}
+      </header>
+      <div className='content'>
+        {isLoading ? null: <Table />}
+        {data.length ? <Pizza party={data}/> : null}
+      </div>
     </div>
   );
 }
